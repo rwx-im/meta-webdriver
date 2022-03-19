@@ -30,7 +30,7 @@ COPY --from=builder /usr/src/target/release/meta-webdriver /usr/local/bin/meta-w
 RUN apt update \
   && apt install -y chromium-driver xvfb
 
-RUN adduser --system --home /workspace usr
+RUN adduser --home /workspace usr
 WORKDIR /workspace
 USER usr
 
