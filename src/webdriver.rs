@@ -70,6 +70,8 @@ impl ChromeDriver {
 impl Drop for ChromeDriver {
     fn drop(&mut self) {
         if self.child.try_wait().unwrap().is_none() {
+            debug!("Killing child ChromeDriver");
+
             self.child.kill().unwrap();
         }
     }

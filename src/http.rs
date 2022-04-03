@@ -79,7 +79,15 @@ mod handlers {
             .get("url")
             .ok_or(ServerError::MissingParameter("url"))?;
 
-        let wd = state.driver.webdriver().await.unwrap();
+        let wd = match state.driver.webdriver().await {
+            Ok(wd) => wd,
+            Err(err) => {
+                error!(?err, "Could not initialize a WebDriver instance");
+
+                std::process::exit(1);
+            }
+        };
+
         wd.get(url).await.map_err(|_| ServerError::WebDriverError)?;
 
         debug!(?url, "navigating to requested url");

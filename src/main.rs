@@ -3,6 +3,7 @@ use std::sync::Arc;
 use clap::Parser;
 use color_eyre::eyre;
 use opentelemetry::global;
+use tracing::error;
 use tracing_error::ErrorLayer;
 use tracing_subscriber::layer::SubscriberExt;
 use tracing_subscriber::EnvFilter;
@@ -59,9 +60,9 @@ async fn main() -> eyre::Result<()> {
         driver: webdriver::ChromeDriver::new("/usr/bin/chromedriver", 4444)?,
     });
 
-    let http_server = http::start_server(state.clone());
+    http::start_server(state.clone()).await;
 
-    let _ = tokio::join!(http_server);
+    error!("stopping application");
 
     Ok(())
 }
